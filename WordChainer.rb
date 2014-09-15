@@ -24,7 +24,13 @@ class WordChainer
 		adjacent_words.reject {|adj| adj == word}
 	end
 	
-	def run(source = "market", target = "filter")
+	def run(source = "mark", target = "temp")
+		if source.length != target.length
+			puts "No path possible between #{source} and #{target}"
+			puts "The source and target must be the same length"
+			return false
+		end
+
 		@current_words = [source]
 		@all_seen_words = { source => nil }
 
@@ -33,7 +39,15 @@ class WordChainer
 		end
 
 		path = build_path(target)
-		path.each {|word| puts word unless word.nil? }
+
+		if path.count > 1
+			puts "Path found from #{source} to #{target}"
+			path.each {|word| puts word}
+			return true
+		else
+			puts "No path found from #{source} to #{target}"
+			return false
+		end
 	end
 
 	def explore_current_words
@@ -61,10 +75,10 @@ class WordChainer
 			next_word = path.last
 		end
 
-		path.reverse
+		path.compact.reverse
 
 	end
 end
 
-# test_wc = WordChainer.new
-# test_wc.run
+test_wc = WordChainer.new
+test_wc.run
