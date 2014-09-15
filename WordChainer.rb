@@ -24,13 +24,16 @@ class WordChainer
 		adjacent_words.reject {|adj| adj == word}
 	end
 	
-	def run(source = "market", target = "septic")
+	def run(source = "market", target = "filter")
 		@current_words = [source]
 		@all_seen_words = { source => nil }
 
-		until @current_words.empty?
+		until @current_words.empty? || @all_seen_words.include?(target)
 			explore_current_words
 		end
+
+		path = build_path(target)
+		path.each {|word| puts word unless word.nil? }
 	end
 
 	def explore_current_words
@@ -44,10 +47,24 @@ class WordChainer
 			end
 		end
 		
-		new_current_words.each {|word| puts "#{word} => #{@all_seen_words[word]}" }
+		# new_current_words.each {|word| puts "#{word} => #{@all_seen_words[word]}" }
 		@current_words = new_current_words
+	end
+
+	def build_path(target)
+		path = [target, @all_seen_words[target]]
+		next_word = path.last
+
+
+		until next_word == target || next_word == nil
+			path << @all_seen_words[next_word]
+			next_word = path.last
+		end
+
+		path.reverse
+
 	end
 end
 
-test_wc = WordChainer.new
-p test_wc.run
+# test_wc = WordChainer.new
+# test_wc.run
