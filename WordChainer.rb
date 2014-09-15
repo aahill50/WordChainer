@@ -23,7 +23,28 @@ class WordChainer
 
 		adjacent_words.reject {|adj| adj == word}
 	end
+	
+	def run(source = "purses", target = "fairly")
+		@current_words = [source]
+		@all_seen_words = [source]
+
+		until @current_words.empty?
+			new_current_words = []
+
+			@current_words.each do |word|
+				adjacent_words(word).each do |adj_word|
+					next if @all_seen_words.include?(adj_word)
+					new_current_words << adj_word
+					@all_seen_words << adj_word
+				end
+			end
+			
+			new_current_words.each {|word| puts word }
+			@current_words = new_current_words
+
+		end
+	end
 end
 
-# test_wc = WordChainer.new
-# p test_wc.adjacent_words("cant")
+test_wc = WordChainer.new
+p test_wc.run
